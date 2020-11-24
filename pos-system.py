@@ -22,7 +22,11 @@ class Order:
         for item in self.item_order_list:
             print("商品コード:{}".format(item))
 
-
+    def view_item_detail(self):
+        for item_master in self.item_master:
+            for item in self.item_order_list:
+                if item in item_master.item_code:
+                    print('商品名:{} 商品価格:{}'.format(item_master.item_name, item_master.price))
 
 
 ### メイン処理
@@ -38,6 +42,7 @@ def main():
     order.add_item_order("001")
     order.add_item_order("002")
     order.add_item_order("003")
+    order.view_item_detail()
     # オーダー表示
     order.view_item_list()
 
