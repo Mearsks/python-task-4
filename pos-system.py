@@ -1,3 +1,6 @@
+import sys
+
+
 ### 商品クラス
 class Item:
     def __init__(self, item_code, item_name, price):
@@ -29,6 +32,16 @@ class Order:
                     print('商品名:{} 商品価格:{}'.format(item_master.item_name, item_master.price))
 
 
+# 商品オーダー時にマスターに登録されている商品か調べる関数
+def isvalid_order_code(master, order_item_code):
+    for item in master:
+        if order_item_code in item.item_code:
+            return order_item_code
+
+    print('入力内容が間違っています', file=sys.stderr)
+    sys.exit()
+
+
 ### メイン処理
 def main():
     # マスタ登録
@@ -36,15 +49,30 @@ def main():
     item_master.append(Item("001", "りんご", 100))
     item_master.append(Item("002", "なし", 120))
     item_master.append(Item("003", "みかん", 150))
+    for item in item_master:
+        print('商品コード:{}  商品名:{}  商品価格:{}'.format(item.item_code, item.item_name, item.price))
+    order_item_code = input('商品コードを入力して下さい')
+    # 入力内容をvalidate
+    item_code = isvalid_order_code(item_master, order_item_code)
 
     # オーダー登録
     order = Order(item_master)
-    order.add_item_order("001")
-    order.add_item_order("002")
-    order.add_item_order("003")
-    order.view_item_detail()
+    order.add_item_order(item_code)
+
     # オーダー表示
     order.view_item_list()
+    # オーダーの内容表示
+    order.view_item_detail()
+
+
+
+# order = Order(item_master)
+# order.add_item_order("001")
+# order.add_item_order("002")
+# order.add_item_order("003")
+# order.view_item_detail()
+# # オーダー表示
+# order.view_item_list()
 
 
 if __name__ == "__main__":
