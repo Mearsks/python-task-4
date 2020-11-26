@@ -7,7 +7,7 @@ class Item:
     def __init__(self, item_code, item_name, price):
         self.item_code = item_code
         self.item_name = item_name
-        self.price = price
+        self.price = int(price)
 
     def get_price(self):
         return self.price
@@ -19,14 +19,15 @@ class Order:
         self.item_order_list = []
         self.item_master = item_master
 
-    def add_item_order(self, item_code):
-        self.item_order_list.append(item_code)
+    def add_item_order(self, item_code, quantity):
+        self.item_order_list.append([item_code, quantity])
+
 
     def view_item_list(self):
         for item in self.item_order_list:
-            print("商品コード:{}".format(item))
+            print("商品コード : {} 個数 : {}".format(item[0], item[1]))
 
-    def view_item_detail(self):
+    def show_all_items(self):
         for item_master in self.item_master:
             for item in self.item_order_list:
                 if item in item_master.item_code:
@@ -54,21 +55,34 @@ def main():
             col = tuple(row)
             item_master.append(Item(col[0], col[1], int(col[2])))
 
-
+    # ターミナルから商品をオーダー
     for item in item_master:
         print('商品コード : {}  商品名 : {}  価格 : {}'.format(item.item_code, item.item_name, item.price))
     order_item_code = input('商品コードを入力して下さい')
     # 入力内容をvalidate
     item_code = isvalid_order_code(item_master, order_item_code)
-
+    # 注文個数を入力
+    print('商品コード : {}'.format(item_code))
+    quantity = input('何個注文しますか')
+    if not quantity:
+        print('入力内容が間違っています', file=sys.stderr)
+        sys.exit()
+    else:
+        # オーダー登録
+        order = Order(item_master)
+        order.add_item_order(item_code, int(quantity))
+        order.view_item_list()
+        # order.show_all_items()
+        """
+        オーダー登録時に個数も登録できる様にする
+         """
+    # 個数を入力
     # オーダー登録
-    order = Order(item_master)
-    order.add_item_order(item_code)
 
     # オーダー表示
-    order.view_item_list()
+
     # オーダーの内容表示
-    order.view_item_detail()
+
 
 
 # order = Order(item_master)
