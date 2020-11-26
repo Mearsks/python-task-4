@@ -16,30 +16,38 @@ class Item:
 ### オーダークラス
 class Order:
     def __init__(self, item_master):
-        self.item_order_list = []
+        self.item_order_list = {
+            '001': 1,
+            '003': 5,
+        }
         self.item_master = item_master
 
     def add_item_order(self, item_code, quantity):
-        self.item_order_list.append([item_code, quantity])
-
+        if item_code in self.item_order_list.keys():
+            self.item_order_list[item_code] += quantity
+        else:
+            self.item_order_list[item_code] = quantity
 
     def view_item_list(self):
-        for item in self.item_order_list:
-            print("商品コード : {} 個数 : {}".format(item[0], item[1]))
+        for item_code, quantity in self.item_order_list.items():
+            print("商品コード: {} 個数: {}".format(item_code, quantity))
 
-    def show_all_items(self):
+    def show_all(self):
+        total_amount = 0
         for item_master in self.item_master:
-            for item in self.item_order_list:
-                if item in item_master.item_code:
+            for item_code, quantity in self.item_order_list.items():
+                if item_code in item_master.item_code:
+                    total_amount += (item_master.price * quantity)
                     print('商品名:{} 商品価格:{}'.format(item_master.item_name, item_master.price))
-
+                    print('個数{}'.format(quantity))
+        print('合計金額: {}'.format(total_amount))
+        return total_amount
 
 # 商品オーダー時にマスターに登録されている商品か調べる関数
 def isvalid_order_code(master, order_item_code):
     for item in master:
         if order_item_code in item.item_code:
             return order_item_code
-
     print('入力内容が間違っています', file=sys.stderr)
     sys.exit()
 
@@ -63,7 +71,7 @@ def main():
     item_code = isvalid_order_code(item_master, order_item_code)
     # 注文個数を入力
     print('商品コード : {}'.format(item_code))
-    quantity = input('何個注文しますか')
+    quantity = input('何個注文しますか: ')
     if not quantity:
         print('入力内容が間違っています', file=sys.stderr)
         sys.exit()
@@ -71,20 +79,11 @@ def main():
         # オーダー登録
         order = Order(item_master)
         order.add_item_order(item_code, int(quantity))
+        # オーダー表示
         order.view_item_list()
-        # order.show_all_items()
-        """
-        オーダー登録時に個数も登録できる様にする
-         """
-    # 個数を入力
-    # オーダー登録
-
-    # オーダー表示
-
-    # オーダーの内容表示
-
-
-
+        # オーダー登録した商品の一覧（商品名、価格）を表示し、かつ合計金額、個数を表示
+        total_amount = order.show_all()
+        # print(total_amount)
 # order = Order(item_master)
 # order.add_item_order("001")
 # order.add_item_order("002")
