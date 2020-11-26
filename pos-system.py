@@ -43,6 +43,7 @@ class Order:
         print('合計金額: {}'.format(total_amount))
         return total_amount
 
+
 # 商品オーダー時にマスターに登録されている商品か調べる関数
 def isvalid_order_code(master, order_item_code):
     for item in master:
@@ -56,6 +57,8 @@ def isvalid_order_code(master, order_item_code):
 def main():
     # マスタ登録
     item_master = []
+    # トータル金額
+    total_amount = 0
     # 商品マスターをcsvから登録
     with open('products_master.csv') as f:
         reader = csv.reader(f)
@@ -82,8 +85,24 @@ def main():
         # オーダー表示
         order.view_item_list()
         # オーダー登録した商品の一覧（商品名、価格）を表示し、かつ合計金額、個数を表示
-        total_amount = order.show_all()
-        # print(total_amount)
+        total_amount += order.show_all()
+
+    # お釣り計算
+    customer_payment = input('お金をお支払いください>> ')
+    if not customer_payment:
+        print('入力が間違っています')
+        return
+    elif total_amount > int(customer_payment):
+        print('金額が足りていません')
+        return
+    return_change = int(customer_payment) - total_amount
+    if return_change > 0:
+        print('お釣りは{}円です'.format(return_change))
+        print('ありがとうございました')
+    else:
+        print('ありがとうございました')
+
+
 # order = Order(item_master)
 # order.add_item_order("001")
 # order.add_item_order("002")
