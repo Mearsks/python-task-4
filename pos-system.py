@@ -1,4 +1,5 @@
 import sys
+import csv
 
 
 ### 商品クラス
@@ -46,11 +47,16 @@ def isvalid_order_code(master, order_item_code):
 def main():
     # マスタ登録
     item_master = []
-    item_master.append(Item("001", "りんご", 100))
-    item_master.append(Item("002", "なし", 120))
-    item_master.append(Item("003", "みかん", 150))
+    # 商品マスターをcsvから登録
+    with open('products_master.csv') as f:
+        reader = csv.reader(f)
+        for row in reader:
+            col = tuple(row)
+            item_master.append(Item(col[0], col[1], int(col[2])))
+
+
     for item in item_master:
-        print('商品コード:{}  商品名:{}  商品価格:{}'.format(item.item_code, item.item_name, item.price))
+        print('商品コード : {}  商品名 : {}  価格 : {}'.format(item.item_code, item.item_name, item.price))
     order_item_code = input('商品コードを入力して下さい')
     # 入力内容をvalidate
     item_code = isvalid_order_code(item_master, order_item_code)
@@ -65,7 +71,6 @@ def main():
     order.view_item_detail()
 
 
-
 # order = Order(item_master)
 # order.add_item_order("001")
 # order.add_item_order("002")
@@ -77,3 +82,9 @@ def main():
 
 if __name__ == "__main__":
     main()
+# Column = ['商品コード', '商品名', '価格']
+# lista = ["001", "りんご", 100]
+# listb = ["002", "なし", 120]
+# listc = ["003", "みかん", 150]
+# df = pd.DataFrame([lista, listb, listc], columns=Column)
+# df.to_csv("products_master.csv", index=False)
