@@ -46,11 +46,6 @@ class Order:
         print('合計金額: {}'.format(total_amount))
         return total_amount, purchase_list
 
-    def save_purchase_list(self, item_name, item_price, quantity):
-        with open('hoge.txt', 'a') as f:
-            print()
-            print('商品名: {} 商品価格: {}　購入個数: {}'.format(item_name, item_price, quantity), file=f)
-
 
 # 商品オーダー時にマスターに登録されている商品か調べる関数
 def isvalid_order_code(master, order_item_code):
@@ -59,6 +54,7 @@ def isvalid_order_code(master, order_item_code):
             return order_item_code
     print('入力内容が間違っています', file=sys.stderr)
     sys.exit()
+
 
 # txtファイルにして保存
 def save_file(purchase_list, total_amount, customer_payment, return_change):
